@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:sws="http://www.springframework.org/schema/web-services"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- the base package to scan for spring components, note that only classes 
+		that have @Component annotation will the considered to be beans -->
+	<context:component-scan base-package="org.menacheri" />
+
+	<sws:annotation-driven />
+
+	<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
+
+	<!-- The message factory bean is used in the creation of the soap http webservice 
+		receiver bean which will map incoming soap-http requests to relevant endpoints -->
+	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />
+
+	<!-- The message receiver bean is used in the creation of the soap http 
+		webservice receiver bean which will map incoming soap-http requests to relevant 
+		endpoints -->
+	<bean id="messageReceiver"
+		class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+	<!-- This is the default mapping, other mappings can exist in code as annotations 
+		and will be used for routing messages -->
+		<property name="endpointMappings" ref="endpointMapping" />
+	</bean>
+
+	<bean id="endpointMapping"
+		class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
+		<!-- The hrEndpoint is a component class annotated in code, not in this bean xml -->
+		<property name="defaultEndpoint" ref="hrEndpoint" />
+	</bean>
+
+	<!-- The embedded HTTP server which will handle incoming SOAP requests -->
+	<bean id="httpServer"
+		class="org.springframework.remoting.support.SimpleHttpServerFactoryBean">
+		<!-- This is the most important part of the bean, this map defines two 
+			sets of information, one) where in the context path you can get the actual 
+			wsdl files and two) web service end points and their corresponding soap handler. 
+			Note that the wsdl being shown to user is purely optional and done for understandability 
+			purpose only, however web service end points are how external clients can invoke 
+			web services so if the end point is /xyz in the map, then external clients 
+			should use http://<ipaddress>:portNumer/xyz to invoke the service -->
+		<property name="contexts">
+			<map>
+				<entry key="/hr.wsdl" value-ref="hrWsdlHandler" />
+				<entry key="/hr/holidayService" value-ref="soapHandler" />
+			</map>
+		</property>
+		<property name="port" value="${server.port}" />
+	</bean>
+
+	<!-- The SOAP handler acts as the SOAP Server which will accept incoming 
+		webservice request from clients and map it to the right end point -->
+	<bean id="soapHandler"
+		class="org.springframework.ws.transport.http.WebServiceMessageReceiverHttpHandler">
+		<property name="messageFactory" ref="messageFactory" />
+		<property name="messageReceiver" ref="messageReceiver" />
+	</bean>
+
+	<!-- The wsdl handler is used to show the wsdl to user in IE or other browser, 
+		it in turn uses a wsdl definition bean and a classpath resource(the actual 
+		wsdl file in the classpath) -->
+	<bean id="hrWsdlHandler"
+		class="org.springframework.ws.transport.http.WsdlDefinitionHttpHandler">
+		<property name="definition" ref="hrWsdlDefinition" />
+	</bean>
+
+	<bean id="hrWsdlDefinition"
+		class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+		<!-- The wsdl property is of type Resource, but you can assign a relative file path 
+			value to it. The built-in property editor ResourceEditor will convert it 
+			into a Resource object. -->
+		<property name="wsdl" value="classpath:hr.wsdl"></property>
+	</bean>
+
+	<!-- Spring template class which can be used as a web service's client -->
+	<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate" />
+	
+	<!-- Configure all properties files here, wildcards like *.properties are 
+		also allowed -->
+	<context:property-placeholder
+		location="ws-int-test.properties,jdbc.properties" />
+
+	<!-- Initialize the log4j configuration file -->
+	<bean id="log4jInitialization"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetClass" value="org.springframework.util.Log4jConfigurer" />
+		<property name="targetMethod" value="initLogging" />
+		<property name="arguments">
+			<list>
+				<value>Testlog4j.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Datasource pool configuration using DBCP pool
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${db.driverClassName}" />
+		<property name="url" value="${db.url}" />
+		<property name="username" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+		<property name="initialSize" value="2" />
+	</bean>
+	
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+	destroy-method="close">
+		<property name="driverClass" value="${db.driverClassName}" />
+		<property name="jdbcUrl" value="${db.url}" />
+		<property name="user" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+	</bean>
+	-->
+	
+	<!-- Bean used for validating the incoming xml against the xsd -->
+	<bean id="xmlValidator" class="org.menacheri.util.XMLValidator" >
+		<property name="schemaSource">
+			<bean class="org.springframework.xml.transform.ResourceSource">
+				<constructor-arg value="classpath:hr.xsd" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="executorService" class="java.util.concurrent.Executors"
+	factory-method="newFixedThreadPool" destroy-method="shutdown">
+		<constructor-arg value="${threadpool.size}" />
+	</bean>  
+
+	<bean id="pooledFiberFactory" class="org.jetlang.fibers.PoolFiberFactory">
+		<constructor-arg ref="executorService" />
+	</bean>
+	
+</beans>

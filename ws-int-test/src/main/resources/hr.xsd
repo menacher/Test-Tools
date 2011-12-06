@@ -1,0 +1,38 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:hr="http://menacheri.org/hr/schemas" elementFormDefault="qualified"
+	targetNamespace="http://menacheri.org/hr/schemas">
+	<xs:element name="HolidayRequest">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="HolidayDates" type="hr:HolidayType"/>                       
+                <xs:element name="Employee" type="hr:EmployeeType"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="HolidayResponse">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="Employee" type="hr:EmployeeType" />
+				<xs:element name="Status" type="hr:RequestStatus" />
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+	<xs:complexType name="HolidayType">
+		<xs:sequence>
+			<xs:element name="StartDate" type="xs:date" />
+			<xs:element name="EndDate" type="xs:date" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EmployeeType">
+		<xs:sequence>
+			<xs:element name="Number" type="xs:integer" />
+			<xs:element name="FirstName" type="xs:string" />
+			<xs:element name="LastName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="RequestStatus">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="SUCCESS|FAILURE" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
