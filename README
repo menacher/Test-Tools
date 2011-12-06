@@ -1,1 +1,1 @@
-Test Tools.
+An integration test suite project that can be used for functional integration testing of SOAP webservice endpoints. It is built on top of TestNG testing framework, spring webservices project and uses Jetlang and Groovy.
