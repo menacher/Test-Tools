@@ -1,3 +1,5 @@
+<html>
+<body>
 An integration test suite project that can be used for functional integration testing of SOAP webservice endpoints. It is built on top of <a href="http://testng.org/">TestNG testing framework</a>, spring webservices (<a href="http://static.springsource.org/spring-ws/site/">spring-ws</a>) project and uses <a href="http://code.google.com/p/jetlang/">Jetlang</a> and <a href="http://groovy.codehaus.org/">Groovy</a>.
 
 <h2>Installation</h2>
@@ -15,3 +17,5 @@ apart from the groovy eclipse plugin.
 If everything works as expected you should see some test cases executed successfully!
 
 Happy coding!
+</body>
+</html>
