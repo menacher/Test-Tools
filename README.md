@@ -10,9 +10,9 @@ Steps
 -----
 1.  git clone git@github.com:menacher/Test-Tools.git
 2.  cd Test-Tools
-3.  mvn eclipse:eclipse - Takes time!
+3.  mvn eclipse:eclipse - **Takes time, the first time!**
 4.  eclipse -> file -> import -> git -> select repository and import
-5.  ws-int-test project in eclipse -> right click on pom.xml -> run as -> maven test - takes time!
+5.  ws-int-test project in eclipse -> right click on pom.xml -> run as -> maven test - **Takes time the first time!**
 
 If everything works as expected you should see some test cases executed successfully!
 
