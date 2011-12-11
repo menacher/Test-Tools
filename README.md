@@ -3,7 +3,7 @@ Head over to the wiki pages for a quick start.
 
 Installation
 ============
-**Pre-requisites**: Please have maven 3+ and [Spring source tool suite](http://www.springsource.com/developer/sts "STS") (or eclipse) installed. This project relies on the groovy-eclipse compiler in order to compile the code and not maven java or groovy compiler. If that is unviable please modify the pom accordingly. You also need to install the Groovy feature(including the optional 1.8 compiler) in STS/eclipse. If you are using plain vanilla eclipse, then M2Eclipse and EGit plugins need to be installed
+**Pre-requisites**: Please have maven 3+ and [Spring source tool suite](http://www.springsource.com/developer/sts "STS") (or eclipse) installed. This project relies on the [groovy-eclipse compiler](http://groovy.codehaus.org/Groovy-Eclipse+compiler+plugin+for+Maven "groovy-eclipse") in order to compile the code and not maven java or groovy compiler. If that is unviable please modify the pom accordingly. You also need to install the Groovy feature(including the optional 1.8 compiler) in STS/eclipse. If you are using plain vanilla eclipse, then M2Eclipse and EGit plugins need to be installed
 apart from the groovy eclipse plugin.
 
 Steps
