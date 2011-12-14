@@ -2,7 +2,6 @@ package org.menacheri.invmmsg;
 
 import org.jetlang.channels.ChannelSubscription;
 import org.jetlang.channels.MemoryChannel;
-import org.jetlang.core.Disposable;
 import org.jetlang.core.DisposingExecutor;
 import org.jetlang.fibers.Fiber;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +71,7 @@ public class InVMChannel {
 		messageCallback.setFiber(sync);
 		ChannelSubscription<IMessage> subscription = new ChannelSubscription<IMessage>(
 				sync, messageCallback, identity);
-		Disposable disposable = messageQueue.subscribe(subscription);
-		messageCallback.setDisposable(disposable);
+		messageQueue.subscribe(subscription);
 	}
 
 	/**
@@ -100,8 +98,7 @@ public class InVMChannel {
 		messageCallback.setFiber(fiber);
 		ChannelSubscription<IMessage> subscription = new ChannelSubscription<IMessage>(
 				fiber, messageCallback, identity);
-		Disposable disposable = messageQueue.subscribe(subscription);
-		messageCallback.setDisposable(disposable);
+		messageQueue.subscribe(subscription);
 	}
 
 	/**
@@ -120,8 +117,8 @@ public class InVMChannel {
 	public void subscribeSync(IMessageCallback messageCallback) {
 		DisposingExecutor sync = fibers.syncFiber();
 		messageCallback.setFiber(sync);
-		Disposable disposable = messageQueue.subscribe(sync, messageCallback);
-		messageCallback.setDisposable(disposable);
+		messageQueue.subscribe(sync, messageCallback);
+		
 	}
 	
 	/**
@@ -141,9 +138,7 @@ public class InVMChannel {
 	public void subscribe(IMessageCallback messageCallback) {
 		Fiber fiber = fibers.threadFiber();
 		messageCallback.setFiber(fiber);
-		Disposable disposable = messageQueue.subscribe(
-				messageCallback.getFiber(), messageCallback);
-		messageCallback.setDisposable(disposable);
+		messageQueue.subscribe(messageCallback.getFiber(), messageCallback);
 	}
 	
 	public Fibers getFibers() {

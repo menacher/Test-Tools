@@ -60,10 +60,6 @@ public interface IMessageCallback extends Callback<IMessage> {
 
 	public abstract void setFiber(DisposingExecutor executor);
 
-	public abstract Disposable getDisposable();
-
-	public abstract void setDisposable(Disposable disposable);
-
 	public abstract IMessage getMessage();
 
 	public abstract void setMessage(IMessage iMessage);

@@ -30,7 +30,6 @@ public abstract class MessageCallback implements IMessageCallback {
 	
 	private final CountDownLatch latch = new CountDownLatch(1);
 	private DisposingExecutor fiber;
-	private Disposable disposable;
 	private IMessage iMessage;
 	
 	/* (non-Javadoc)
@@ -64,14 +63,9 @@ public abstract class MessageCallback implements IMessageCallback {
 	public void done()
 	{
 		latch.countDown();
-		// Order of disposing is important, can cause deadlock otherwise,
-		// disposable first, fiber second.
-		if(null != disposable)
-		{
-			disposable.dispose();
-		}
 		if(null!=fiber)
 		{
+			// Disposing the fiber also disposes of all subscriptions.
 			Disposable theDisposable = (Disposable)fiber;
 			theDisposable.dispose();
 		}
@@ -114,22 +108,6 @@ public abstract class MessageCallback implements IMessageCallback {
 		this.fiber = executor;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.menacheri.invmmsg.IMessageCallback#getDisposable()
-	 */
-	@Override
-	public Disposable getDisposable() {
-		return disposable;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.menacheri.invmmsg.IMessageCallback#setDisposable(org.jetlang.core.Disposable)
-	 */
-	@Override
-	public void setDisposable(Disposable disposable) {
-		this.disposable = disposable;
-	}
-
 	/* (non-Javadoc)
 	 * @see org.menacheri.invmmsg.IMessageCallback#getMessage()
 	 */
