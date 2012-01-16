@@ -1,4 +1,4 @@
-An integration test suite project that can be used for functional integration testing of SOAP webservice endpoints. It is built on top of  [TestNG](http://testng.org/) testing framework, [spring webservices](http://static.springsource.org/spring-ws/site/ "spring-ws") project and uses [Jetlang](http://code.google.com/p/jetlang/ "jetlang") and [Groovy](http://groovy.codehaus.org/ "language").    
+This is a webservices integration/functional testing tool, specifically designed to execute multi-request, multi-web service test cases. This testing tool that can be used for functional and integration testing of SOAP webservice endpoints. It is built on top of  [TestNG](http://testng.org/) testing framework, [spring webservices](http://static.springsource.org/spring-ws/site/ "spring-ws") project and uses [Jetlang](http://code.google.com/p/jetlang/ "jetlang") and [Groovy](http://groovy.codehaus.org/ "language").    
 Head over to the wiki pages for a quick start.
 
 Installation
